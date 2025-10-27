@@ -1,0 +1,36 @@
+import java.util.Random;
+
+public class dh {
+
+    public static void main(String[] args) {
+
+        int p = 23;
+        int g = 5;
+        System.out.println("Publically shared values: prime (p) = " +p+ ", primitive root(g) = " +g);
+
+        Random rand = new Random();
+
+        int a = rand.nextInt(p-2) + 1 ;
+        System.out.println("Private key of alice : " +a);
+        int A = (int) (Math.pow(g , a) % p );
+        System.out.println("Public key of alice : " +A);
+
+        int b = rand.nextInt(p-2) + 1 ;
+        System.out.println("Bobs Private Key : " +b);
+        int B = (int) (Math.pow(g , b) % p );
+        System.out.println("Bobs public key :" +B);
+
+        int secretAlice = (int) (Math.pow(B , a) % p);
+        int secretBob = (int) (Math.pow(A , b) % p );
+
+        System.out.println("Shared Secret computed by alice : " +secretAlice);
+        System.out.println("Shared secret computed by Bob : " +secretBob);
+
+        if (secretAlice == secretBob){
+            System.out.println("Secret Key established successfully ");
+        }else{
+            System.out.println("Key exchange failed ");
+        }
+    }
+
+}
