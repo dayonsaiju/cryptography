@@ -1,0 +1,48 @@
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import java.util.Base64;
+import java.util.Scanner;
+
+public class DES {
+    public static void main(String[] args) {
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter the Message : ");
+            String message = sc.nextLine();
+
+            System.out.println("Enter the 8 character Key : ");
+            String keyString = sc.nextLine();
+
+            if (keyString.length() < 8) {
+                System.out.println("Invalid Key length, must be at least 8 characters.");
+                return;
+            }
+
+            System.out.println("Original Message : " + message);
+
+            // Step 1: Create DES key
+            DESKeySpec keySpec = new DESKeySpec(keyString.getBytes());
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey secretKey = keyFactory.generateSecret(keySpec);
+
+            // Step 2: Encryption
+            Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedBytes = cipher.doFinal(message.getBytes());
+            String encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
+            System.out.println("Encrypted Message : " + encryptedText);
+
+            // Step 3: Decryption
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decodedBytes = Base64.getDecoder().decode(encryptedText);
+            byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+            String decryptedString = new String(decryptedBytes);
+            System.out.println("Decrypted Message : " + decryptedString);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
