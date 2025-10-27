@@ -1,0 +1,40 @@
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import java.util.Scanner;
+
+public class Rc4 {
+    public static void main(String[] args) {
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter the message :");
+            String originalMsg = sc.nextLine();
+            System.out.println("Enter the secret Key :");
+            String secretKeyString = sc.nextLine();
+
+            System.out.println("Original Message : " + originalMsg);
+
+            // Create RC4 Cipher
+            Cipher cipher = Cipher.getInstance("ARCFOUR");
+
+            // Create Secret Key
+            SecretKey secretKey = new SecretKeySpec(secretKeyString.getBytes(), "ARCFOUR");
+
+            // Encryption
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedBytes = cipher.doFinal(originalMsg.getBytes());
+            String encryptedString = Base64.getEncoder().encodeToString(encryptedBytes);
+            System.out.println("Encrypted Message : " + encryptedString);
+
+            // Decryption
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decodeBytes = Base64.getDecoder().decode(encryptedString);
+            byte[] decryptedBytes = cipher.doFinal(decodeBytes);
+            String decryptedString = new String(decryptedBytes);
+            System.out.println("Decrypted Message : " + decryptedString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
