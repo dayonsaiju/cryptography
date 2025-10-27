@@ -1,0 +1,55 @@
+import java.security.*;
+import java.util.Base64;
+import java.util.Scanner;
+
+public class SignatureDemo {
+
+    private static final String ALGORITHM = "SHA256withRSA";
+    private static final int KEY_SIZE = 2048;
+
+    public static void main(String[] args) {
+        try {
+            // Generate key pair
+            KeyPair kp = generateKeyPair();
+            PublicKey pubKey = kp.getPublic();
+            PrivateKey privKey = kp.getPrivate();
+
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter the message to be signed: ");
+            String msg = sc.nextLine();
+            System.out.println("Original Message: " + msg);
+
+            // Sign the message
+            byte[] signatureBytes = signMessage(msg.getBytes(), privKey);
+            String signatureString = Base64.getEncoder().encodeToString(signatureBytes);
+            System.out.println("Digital Signature (Base64): " + signatureString);
+
+            // Verify the signature
+            boolean verified = verifySignature(msg.getBytes(), signatureBytes, pubKey);
+            System.out.println("Signature Verified: " + verified);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(KEY_SIZE);
+        return keyGen.generateKeyPair();
+    }
+
+    private static byte[] signMessage(byte[] data, PrivateKey privateKey) throws Exception {
+        Signature sig = Signature.getInstance(ALGORITHM);
+        sig.initSign(privateKey);
+        sig.update(data);
+        return sig.sign();
+    }
+
+    private static boolean verifySignature(byte[] data, byte[] signatureBytes, PublicKey publicKey) throws Exception {
+        Signature sig = Signature.getInstance(ALGORITHM);
+        sig.initVerify(publicKey);
+        sig.update(data);
+        return sig.verify(signatureBytes);
+    }
+}
