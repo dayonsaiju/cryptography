@@ -1,0 +1,28 @@
+import java.util.Scanner;
+
+public class Hash {
+
+    public static byte xorHash(byte[] data) {
+        byte result = 0;
+        for (byte b : data) {
+            result ^= b; // XOR each byte with result
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the Message: ");
+        String message = sc.nextLine();
+
+        byte[] bytes = message.getBytes(); // Convert string to bytes
+
+        byte hash = xorHash(bytes); // Call the xorHash function
+
+        System.out.println("XOR Hash (decimal): " + (hash & 0xFF));
+        System.out.println("XOR Hash (Hex): 0x" + Integer.toHexString(hash & 0xFF).toUpperCase());
+
+        sc.close(); // Correct variable name
+    }
+}
