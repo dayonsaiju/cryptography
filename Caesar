@@ -1,0 +1,52 @@
+import java.util.Scanner;
+
+
+public class Caesar {
+
+    public static String encrypt(String msg , int key) {
+        String enc ="";
+        for (int i = 0 ; i < msg.length() ; i++) {
+            char ch = msg.charAt(i);
+            if ( ch >= 'A' && ch <='Z'){
+                enc += (char) ((ch+key - 'A')%26 + 'A');
+            }else if ( ch >= 'a' && ch<='z'){
+                enc+= (char) ((ch+key -'a')%26 + 'a');
+            }else {
+                enc += ch;
+            }
+        }
+        return enc;
+    }
+    public static String decrypt(String msg , int key) {
+        String dec ="";
+        for (int i = 0 ; i < msg.length() ; i++) {
+            char ch = msg.charAt(i);
+            if ( ch >= 'A' && ch <='Z'){
+                dec += (char) ((ch-key - 'A' + 26 )%26 + 'A');
+            }else if ( ch >= 'a' && ch<='z'){
+                dec += (char) ((ch-key -'a' + 26 )%26 + 'a');
+            }else {
+                dec += ch;
+            }
+        }
+        return dec;
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the Message : ");
+        String msg = sc.nextLine();
+
+        int key = 3;
+        String encrypted = encrypt(msg,key);
+        String decrypted = decrypt(encrypted, key);
+
+        System.out.println("Original Message : " +msg);
+        System.out.println("Encrypted message : " +encrypted);
+        System.out.println("Decrypted Message : " +decrypted);
+
+        sc.close();
+
+    }
+
+}
